@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Live Hand Gesture Recognizer</title>
+  <meta name="description" content="Real-time hand gesture recognition in the browser with MediaPipe. Show a thumbs up to your webcam and it knows." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👍</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">👍</span>
+      <div>
+        <h1>Gesture Recognizer</h1>
+        <p class="tagline">Real-time hand gesture detection, running entirely in your browser</p>
+      </div>
+    </div>
+    <div class="status" id="status" data-state="loading">
+      <span class="dot"></span><span id="statusText">Loading model…</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="stage-wrap">
+      <div class="stage" id="stage">
+        <video id="webcam" autoplay playsinline muted></video>
+        <canvas id="overlay"></canvas>
+        <div class="reactions" id="reactions" aria-hidden="true"></div>
+
+        <div class="placeholder" id="placeholder">
+          <div class="placeholder-emoji">🖐️</div>
+          <p>Turn on your camera, then show a gesture.</p>
+          <p class="hint">Video never leaves your device. All processing happens locally.</p>
+        </div>
+
+        <div class="hud">
+          <span class="chip mono" id="fps">— FPS</span>
+          <span class="chip mono" id="handCount">0 hands</span>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn primary" id="startBtn" disabled>Start camera</button>
+        <label class="slider">
+          <span>Confidence threshold <strong class="mono" id="thresholdValue">60%</strong></span>
+          <input type="range" id="threshold" min="30" max="95" value="60" step="5" />
+        </label>
+        <label class="toggle">
+          <input type="checkbox" id="showSkeleton" checked />
+          <span>Show hand skeleton</span>
+        </label>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <section class="card">
+        <h2>Detected now</h2>
+        <div class="hands" id="hands">
+          <div class="hand-empty">No hands in view</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Gestures it knows</h2>
+        <div class="guide" id="guide"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Gesture log</h2>
+          <button class="btn ghost small" id="clearLog">Clear</button>
+        </div>
+        <ol class="log" id="log"></ol>
+      </section>
+    </aside>
+  </main>
+
+  <footer class="footer">
+    Built with <a href="https://ai.google.dev/edge/mediapipe/solutions/vision/gesture_recognizer" target="_blank" rel="noopener">MediaPipe Gesture Recognizer</a>
+  </footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

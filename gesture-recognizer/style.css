@@ -1,0 +1,292 @@
+:root {
+  --bg: #0b0d12;
+  --surface: #13161e;
+  --surface-2: #1b1f2a;
+  --border: #262b38;
+  --text: #e8eaf0;
+  --muted: #8a90a2;
+  --accent: #7cf0b5;
+  --accent-2: #6aa8ff;
+  --warn: #ffb35c;
+  --danger: #ff6b7d;
+  --radius: 16px;
+  --font: "Space Grotesk", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(900px 500px at 10% -10%, rgba(124, 240, 181, 0.08), transparent 60%),
+    radial-gradient(800px 500px at 110% 10%, rgba(106, 168, 255, 0.08), transparent 60%),
+    var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  line-height: 1.45;
+}
+
+.mono { font-family: var(--mono); }
+
+/* ---------- Header ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px 20px 8px;
+}
+
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  font-size: 26px;
+}
+h1 { margin: 0; font-size: 1.4rem; letter-spacing: -0.02em; }
+.tagline { margin: 2px 0 0; color: var(--muted); font-size: 0.9rem; }
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.status .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--warn); }
+.status[data-state="loading"] .dot { animation: pulse 1s infinite; }
+.status[data-state="ready"] .dot { background: var(--accent-2); }
+.status[data-state="live"] .dot { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+.status[data-state="error"] .dot { background: var(--danger); }
+
+@keyframes pulse { 50% { opacity: 0.3; } }
+
+/* ---------- Layout ---------- */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 20px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 16px 20px 24px;
+}
+
+@media (max-width: 960px) {
+  .layout { grid-template-columns: 1fr; }
+}
+
+/* ---------- Video stage ---------- */
+.stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #07080b;
+  border: 1px solid var(--border);
+}
+
+.stage video,
+.stage canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1); /* mirror so it feels like a mirror */
+}
+
+.placeholder {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  padding: 20px;
+  color: var(--muted);
+}
+.placeholder-emoji { font-size: 64px; margin-bottom: 8px; }
+.placeholder p { margin: 4px 0; }
+.placeholder .hint { font-size: 0.8rem; opacity: 0.7; }
+.stage.live .placeholder { display: none; }
+
+.hud {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  gap: 8px;
+}
+.chip {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(11, 13, 18, 0.7);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--border);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* floating emoji reactions */
+.reactions { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.reaction {
+  position: absolute;
+  bottom: -60px;
+  font-size: 48px;
+  animation: float-up 1.8s ease-out forwards;
+}
+@keyframes float-up {
+  0%   { transform: translateY(0) scale(0.6); opacity: 0; }
+  15%  { opacity: 1; }
+  100% { transform: translateY(-110%) scale(1.2) rotate(var(--rot, 0deg)); opacity: 0; }
+}
+
+/* ---------- Controls ---------- */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 24px;
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.btn {
+  font: inherit;
+  font-weight: 500;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  padding: 10px 18px;
+  cursor: pointer;
+  transition: transform 0.1s, background 0.2s;
+}
+.btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.5; cursor: wait; }
+.btn.primary { background: var(--accent); color: #062014; border-color: transparent; }
+.btn.primary.stop { background: var(--danger); color: #2a0509; }
+.btn.ghost { background: transparent; }
+.btn.small { padding: 4px 10px; font-size: 0.8rem; }
+
+.slider { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem; color: var(--muted); flex: 1; min-width: 200px; }
+.slider strong { color: var(--text); }
+.slider input { accent-color: var(--accent); width: 100%; }
+
+.toggle { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--muted); cursor: pointer; }
+.toggle input { accent-color: var(--accent); width: 16px; height: 16px; }
+
+/* ---------- Side panel ---------- */
+.panel { display: flex; flex-direction: column; gap: 16px; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.card h2 {
+  margin: 0 0 12px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  font-weight: 500;
+}
+.card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.card-head h2 { margin: 0; }
+
+/* current hands */
+.hands { display: flex; flex-direction: column; gap: 10px; }
+.hand-empty { color: var(--muted); font-size: 0.9rem; padding: 18px 0; text-align: center; }
+
+.hand {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 10px;
+  border-radius: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+.hand-emoji { font-size: 40px; text-align: center; line-height: 1; }
+.hand-name { font-weight: 700; font-size: 1.1rem; }
+.hand-side { font-size: 0.75rem; color: var(--muted); }
+.bar { height: 6px; border-radius: 3px; background: var(--border); margin-top: 6px; overflow: hidden; }
+.bar > span { display: block; height: 100%; background: var(--hand-color, var(--accent)); transition: width 0.15s; }
+.hand-score { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+.hand.unknown .hand-name { color: var(--muted); }
+
+/* gesture guide */
+.guide { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.guide-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 4px;
+  border-radius: 12px;
+  background: var(--surface-2);
+  border: 1px solid transparent;
+  text-align: center;
+  transition: border-color 0.15s, transform 0.15s, background 0.15s;
+}
+.guide-item .e { font-size: 26px; }
+.guide-item .l { font-size: 0.7rem; color: var(--muted); }
+.guide-item.active {
+  border-color: var(--accent);
+  background: rgba(124, 240, 181, 0.1);
+  transform: translateY(-2px);
+}
+.guide-item.active .l { color: var(--accent); }
+
+/* log */
+.log {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 220px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.log li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--surface-2);
+  animation: slide-in 0.25s ease-out;
+}
+.log li .t { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); }
+.log:empty::after { content: "Gestures you hold will show up here"; color: var(--muted); font-size: 0.85rem; }
+@keyframes slide-in { from { opacity: 0; transform: translateX(-6px); } }
+
+.footer { text-align: center; color: var(--muted); font-size: 0.8rem; padding: 8px 20px 28px; }
+.footer a { color: var(--accent-2); }
+
+@media (max-width: 480px) {
+  .topbar, .layout { padding-left: 16px; padding-right: 16px; }
+  .guide { grid-template-columns: repeat(4, 1fr); }
+  .controls { gap: 12px; }
+}
